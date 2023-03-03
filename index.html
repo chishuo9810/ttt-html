@@ -10,5 +10,31 @@
       <br><br>
       <input type="submit" value="上傳">
     </form>
+
+    <?php
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+      // 檢查是否有上傳檔案
+      if (isset($_FILES['file']) && $_FILES['file']['error'] === UPLOAD_ERR_OK) {
+        $file = $_FILES['file'];
+        // 檢查是否為圖片檔案
+        if (strpos($file['type'], 'image') === 0) {
+          // 將上傳的檔案移動到指定的目錄
+          $uploadDir = 'uploads/';
+          $uploadFile = $uploadDir . basename($file['name']);
+          if (move_uploaded_file($file['tmp_name'], $uploadFile)) {
+            // 顯示上傳的圖片
+            echo '<img src="' . $uploadFile . '">';
+          } else {
+            echo '檔案上傳失敗';
+          }
+        } else {
+          echo '不支持的檔案類型';
+        }
+      } else {
+        echo '沒有選擇檔案';
+      }
+    }
+    ?>
   </body>
 </html>
+
